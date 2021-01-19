@@ -1,52 +1,78 @@
 ﻿using System;
+using System.Collections;
 
-namespace Finaltestcode
+namespace FinalEventQuestion
 {
-    public class Program
+
+public class Program
     {
         public static void Main()
         {
+             Doctor doctor = new Doctor();
+            Patient patient = new Patient ();
+            Ambulance ambulance = new Ambulance();
+                      
+            Emergency myemergency = new Emergency();
+      
+            myemergency.CallForEmergency += doctor.EmergencyCall;
+            myemergency.CallForEmergency += patient.EmergencyCall;
+            myemergency.CallForEmergency += ambulance.EmergencyCall;
+         
+            myemergency.createNotification("Milton Hospital");
 
-            Adult[] person = new Adult[] {new Adult(), new Child()};
+        }
+    }
 
-            foreach (Adult a in person)
+    public class Doctor
+    {
+        public void EmergencyCall(object sender, EmergencyInfo e)
+        {
+            Console.WriteLine("Doctor Call " + e.hospital);
+        }
+
+    }
+    public class Patient
+    {
+        public void EmergencyCall(object sender, EmergencyInfo e)
+        {
+            Console.WriteLine("Patient Call " + e.hospital);
+        }
+
+    }
+    public class Ambulance
+    {
+  
+        public void EmergencyCall(object sender, EmergencyInfo e)
+        {
+            Console.WriteLine("Ambulance call " + e.hospital);
+        }
+
+    }
+
+    public class Emergency
+    {
+           public event EmergencyEvent CallForEmergency;
+             
+        public void createNotification(string msg)
+        {
+  
+            if (CallForEmergency!= null)
             {
-                a.Name();
+                CallForEmergency(this, new EmergencyInfo(msg));
             }
         }
     }
 
-    public class Adult
+    
+    public delegate void EmergencyEvent(object sender, EmergencyInfo e);
+        
+    public class EmergencyInfo : EventArgs
     {
-
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-
-        public virtual void Name()
+        public string hospital{ get; set; }
+        public EmergencyInfo(string Hospital)
         {
-            FirstName = "AdultFirstNAme";
-            LastName = "AdultLastNAme";
-            Console.WriteLine(FirstName);
-            Console.WriteLine(LastName);
+            hospital = Hospital;
         }
     }
 
-    class Child : Adult
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-
-        public override void Name()
-        {
-            FirstName = "ChildFirstNAme";
-            LastName = "ChildLastNAme";
-            Console.WriteLine(FirstName);
-            Console.WriteLine(LastName);
-        }
-    }
 }
-
-
-
-
-
